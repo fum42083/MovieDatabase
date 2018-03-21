@@ -1,0 +1,14 @@
+{% extends "SearchMovie/maintemplate.html" %}
+{% block content %}
+<div class="container-fluid h-100" id=bg>
+
+
+	{% for dict in dictlist %}
+			{% for k, v in dict.items %}
+				<p>Key: {{k}}; Value: {{v}}</p>
+			{% endfor %}
+   {% endfor %}
+
+
+</div>
+{% endblock %}
