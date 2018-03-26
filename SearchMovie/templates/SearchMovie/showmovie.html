@@ -1,0 +1,81 @@
+{% extends "SearchMovie/maintemplate.html" %}
+{% block content %}
+<div class="container-fluid h-100" id=bg>
+	<div class="row  h-10 align-items-center justify-content-center">
+		<div class="col-4 justify-content-center">
+			<h1 style="color:white; font-size: 50px; font-weight: bold;" class="text-center">{{movie.title}}</h1>
+		</div>
+		<div class="col-8 justify-content-start">
+			<span class="stars" data-rating="{{movie.rating}}" data-num-stars="10" ></span>
+			<script>
+				$.fn.stars = function() {
+					return $(this).each(function() {
+
+						var rating = $(this).data("rating");
+
+						var numStars = $(this).data("numStars");
+
+						var fullStar = new Array(Math.floor(rating + 1)).join('<i class="fa fa-star"></i>');
+
+						var halfStar = ((rating%1) !== 0) ? '<i class="fa fa-star-half-empty"></i>': '';
+
+						var noStar = new Array(Math.floor(numStars + 1 - rating)).join('<i class="fa fa-star-o"></i>');
+
+						$(this).html(fullStar + halfStar + noStar);
+
+					});
+				}
+
+				$('.stars').stars();
+			</script>
+		</div>
+	</div>
+	<div class="row  h-90">
+		<div class="col-4 justify-content-center align-items-center">
+			<img src="{{movie.poster}}" />
+		</div>
+		<div class="col-8 align-items-start">
+			<div class="row">
+				<div class="col-1">
+					<p>Description:</p>
+				</div>
+				<div class="col-11">
+					<p>Rescued from the outrageous neglect of his aunt and uncle, a young boy with a great destiny proves his worth while attending Hogwarts School of Witchcraft and Wizardry. </p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-1">
+					<p>Director:</p>
+				</div>
+				<div class="col-11">
+					<p></p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-1">
+					<p>Stars:</p>
+				</div>
+				<div class="col-11">
+					<p></p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-1">
+					<p>Duration:</p>
+				</div>
+				<div class="col-11">
+					<p>{{movie.durationMin}} Minutes</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-1">
+					<p></p>
+				</div>
+				<div class="col-11">
+					<button>Analyse Movie reviews</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

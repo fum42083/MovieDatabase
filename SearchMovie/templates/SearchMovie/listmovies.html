@@ -1,10 +1,14 @@
 {% extends "SearchMovie/maintemplate.html" %}
 {% block content %}
 <div class="container-fluid h-100" id=bg>
+<form method="post" action="/searchmovie/show/">
+{% csrf_token %}
+<button name="movie" type="submit" value="{{movies.0}}">POST</button>
+</form>
 
 
-	{% for dict in dictlist %}
-			{% for k, v in dict.items %}
+	{% for movie in movies %}
+			{% for k, v in movie.items %}
 				<p>Key: {{k}}; Value: {{v}}</p>
 			{% endfor %}
    {% endfor %}
