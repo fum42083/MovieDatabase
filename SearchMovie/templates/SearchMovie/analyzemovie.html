@@ -1,0 +1,64 @@
+{% extends "SearchMovie/maintemplate.html" %}
+{% block content %}
+<div class="container-fluid h-100" id=bg>
+	<div class="row  h-20 align-items-center justify-content-center">
+		<div class="col-9 justify-content-center">
+			<h1 style="color:white; font-size: 50px; font-weight: bold;" class="text-left">{{movie.title}}</h1>
+		</div>
+		<div class="col-3 justify-content-start">
+			<span class="rating" data-rating="{{movie.rating}}" data-num-stars="10" ></span>
+
+		</div>
+	</div>
+	<div class="row  h-80">
+		<div class="col-3 justify-content-center align-items-center">
+			<img class="img-fluid" src="{{movie.poster}}" />
+		</div>
+		<div class="col-9 align-items-start">
+			<div class="row">
+				<div class="col-1">
+					<p>Outline:</p>
+				</div>
+				<div class="col-11">
+				<span class="ratingcomments" data-rating="{{movie.commentbasedrating}}" data-num-stars="10" ></span>
+				
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-1">
+					<p>Review:</p>
+				</div>
+				<div class="col-11">
+					<p>{{movie.chartdata}}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+								
+				$.fn.stars = function() {
+					return $(this).each(function() {
+
+						var rating = $(this).data("rating");
+
+						var numStars = $(this).data("numStars");
+
+						var fullStar = new Array(Math.floor(rating + 1)).join('<i class="starfull"></i>');
+
+						var halfStar = ((rating%1) !== 0) ? '<i class="starhalf"></i>': '';
+
+						var noStar = new Array(Math.floor(numStars + 1 - rating)).join('<i class="starempty"></i>');
+
+						$(this).html(fullStar + halfStar + noStar);
+
+					});
+				}
+
+				$('.rating').stars();
+				$('.ratingcomments').stars();
+				
+				
+			</script>
+{% endblock %}
