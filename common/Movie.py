@@ -53,15 +53,19 @@ class Movie:
 				
 	def AnalyzeReviews(self):
 		self.GetReviews()
-		self.SetCommentbasedrating()
-		self.GenerateChartData()
+		if self.reviews!=None:
+			self.SetCommentbasedrating()
+			self.GenerateChartData()
 	
 	def GetReviews(self):
-		reviews_temp = self.imdb.get_title_user_reviews(self.id)['reviews']
-		self.reviews = []
-		for review in reviews_temp:
-			review_temp = UserReview(review['helpfulnessScore'], review['reviewText'])
-			self.reviews.append(review_temp)
+		
+		reviews_temp_load = self.imdb.get_title_user_reviews(self.id)
+		if 'reviews' in reviews_temp_load:
+			reviews_temp=reviews_temp_load['reviews']
+			self.reviews = []
+			for review in reviews_temp:
+				review_temp = UserReview(review['helpfulnessScore'], review['reviewText'])
+				self.reviews.append(review_temp)
 		
 	def SetCommentbasedrating(self):
 		scoreSum=0
