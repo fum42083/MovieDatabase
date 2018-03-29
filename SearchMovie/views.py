@@ -16,19 +16,35 @@ def index(request):
 	return render(request, 'SearchMovie/home.html')
 	
 def list(request):
-	#imdb = Imdb()
-	#dictlist = imdb.search_for_title(request.POST.__getitem__("search"))
-	movies = SearchMovies(request.POST.__getitem__("search"))
-	moviesDict=[]
-	for m in movies:
-		
-		moviesDict.append(m.GetJSONSearch())
-	#return HttpResponse(movies[0].title)
-	return render(request, 'SearchMovie/listmovies.html', {'movies': moviesDict})
-
+	if request.method == "POST":
+		#imdb = Imdb()
+		#dictlist = imdb.search_for_title(request.POST.__getitem__("search"))
+		movies = SearchMovies(request.POST.__getitem__("search"))
+		moviesDict=[]
+		for m in movies:
+			moviesDict.append(m.GetJSONSearch())
+		#return HttpResponse(movies[0].title)
+		return render(request, 'SearchMovie/listmovies.html', {'movies': moviesDict})
+	else:
+		return HttpResponse("")
 def show(request):
-	movie=Movie()
-	dict=ast.literal_eval(request.POST.__getitem__("movie"))
-	movie.SetAfterSearch(dict)
-	#return HttpResponse(movie.GetJSONSearch()['rating'])
-	return render(request, 'SearchMovie/showmovie.html', {'movie': movie.GetJSONSearch()})
+	if request.method == "POST":
+		movie=Movie()
+		dict=ast.literal_eval(request.POST.__getitem__("movie"))
+		movie.SetAfterSearch(dict)
+		movie.SetCast()
+		#return HttpResponse(movie.GetJSONSearch()['rating'])
+		return render(request, 'SearchMovie/showmovie.html', {'movie': movie.GetJSONSearch()})
+	else:
+		return HttpResponse("")
+		
+	
+def analyze(request):
+	if request.method == "POST":
+		movie=Movie()
+		dict=ast.literal_eval(request.POST.__getitem__("movie"))
+		movie.SetAfterSearch(dict)
+		movie.AnalyzeReviews()
+		return render(request, 'SearchMovie/analyzemovie.html', {'movie': movie.GetJSONSearch()})
+	else:
+		return HttpResponse("")

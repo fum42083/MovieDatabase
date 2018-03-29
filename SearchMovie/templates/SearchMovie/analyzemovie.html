@@ -2,34 +2,57 @@
 {% block content %}
 <div class="container-fluid h-100" id=bg>
 	<div class="row  h-20 align-items-center justify-content-center">
-		<div class="col-9 justify-content-center">
+		<div class="col-12 justify-content-start align-items-center p-2">
 			<h1 style="color:white; font-size: 50px; font-weight: bold;" class="text-left">{{movie.title}}</h1>
-		</div>
-		<div class="col-3 justify-content-start">
-			<span class="rating" data-rating="{{movie.rating}}" data-num-stars="10" ></span>
-
 		</div>
 	</div>
 	<div class="row  h-80">
-		<div class="col-3 justify-content-center align-items-center">
+		<div class="col-xl-3 col-6 justify-content-center align-items-center">
 			<img class="img-fluid" src="{{movie.poster}}" />
 		</div>
-		<div class="col-9 align-items-start">
+				<div class="w-100 d-xl-none"></div>
+				<div class="d-xl-none" style="height:20px"></div>
+		<div class="col-xl-9 col-12 align-items-start">
 			<div class="row">
-				<div class="col-1">
-					<p>Outline:</p>
+				<div class="col-2">
+					<p>Rating:</p>
 				</div>
-				<div class="col-11">
-				<span class="ratingcomments" data-rating="{{movie.commentbasedrating}}" data-num-stars="10" ></span>
-				
+				<div class="col-10">
+					<span class="rating" data-rating="{{movie.rating|floatformat:0}}" data-num-stars="10" ></span>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-1">
-					<p>Review:</p>
+				<div class="col-2">
+					<p>Commentbased rating:</p>
 				</div>
-				<div class="col-11">
-					<p>{{movie.chartdata}}</p>
+				<div class="col-10">
+					<span class="rating2" data-rating="{{movie.commentbasedrating|floatformat:0}}" data-num-stars="10" ></span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<p>Analyze reviews:</p>
+				</div>
+				<div class="col-10">
+					<div class="dropdown">
+					  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Filter Reviews
+					  </button>
+					  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<a id="dropdowncommentbasedrating" class="dropdown-item" href="#">Commentbased rating</a>
+						<a id="dropdownhelpfulness" class="dropdown-item" href="#">Helpfulness</a>
+					  </div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<p></p>
+				</div>
+				<div class="col-10">
+					<div id="resizable" style="height: 370px;">
+						<div id="chartContainer1" style="height: 100%; width: 100%;"></div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -57,8 +80,95 @@
 				}
 
 				$('.rating').stars();
-				$('.ratingcomments').stars();
+				$('.rating2').stars();
 				
 				
-			</script>
+</script>
+<script>
+	window.onload = function () {
+
+	// Construct options first and then pass it as a parameter
+	var options1 = {
+		animationEnabled: true,
+		theme: "light2",
+		backgroundColor: "transparent",
+		 title:{
+			fontColor: "white",
+			text: "Commentbased rating"
+		},
+		legend : {
+			fontColor: "white",
+		},
+		axisX:{
+			titleFontColor: "white",
+			labelFontColor: "white"
+		},
+		axisY:{
+			titleFontColor: "white",
+			labelFontColor: "white"
+		},
+
+		
+		data: [{
+			type: "column", //change it to line, area, bar, pie, etc
+			legendText: "Commentbased rating",
+			showInLegend: true,
+			dataPoints: [
+				{ y: {{movie.chartdata.DataCommentbasedrating.very_good}}, label: "very good", color:"#5b48af" },
+				{ y: {{movie.chartdata.DataCommentbasedrating.good}}, label: "good", color: "#a8af13" },
+				{ y: {{movie.chartdata.DataCommentbasedrating.ok}}, label: "ok", color:"#af4444" },
+				{ y: {{movie.chartdata.DataCommentbasedrating.bad}}, label: "bad", color:"#1e914c" }
+				]
+			}]
+	};
+	
+	var options2 = {
+		animationEnabled: true,
+		theme: "light2",
+		backgroundColor: "transparent",
+		 title:{
+			fontColor: "white",
+			text: "Helpfulness"
+		},
+		legend : {
+			fontColor: "white",
+		},
+		axisX:{
+			titleFontColor: "white",
+			labelFontColor: "white"
+		},
+		axisY:{
+			titleFontColor: "white",
+			labelFontColor: "white"
+		},
+		data: [{
+			type: "column", //change it to line, area, bar, pie, etc
+			legendText: "Helpfulness",
+			showInLegend: true,
+			dataPoints: [
+				{ y: {{movie.chartdata.DataHelpfulness.very_helpful}}, label: "very helpful", color:"#5b48af" },
+				{ y: {{movie.chartdata.DataHelpfulness.helpful}}, label: "helpful", color: "#a8af13" },
+				{ y: {{movie.chartdata.DataHelpfulness.not_helpful}}, label: "not helpful", color:"#af4444"  },
+				]
+			}]
+	};
+
+	$("#resizable").resizable({
+		create: function (event, ui) {
+			//Create chart.
+			$("#chartContainer1").CanvasJSChart(options1);
+		},
+		resize: function (event, ui) {
+			//Update chart size according to its container size.
+			$("#chartContainer1").CanvasJSChart().render();
+		}
+	});
+	
+	$('#dropdowncommentbasedrating').click(function(){$("#chartContainer1").CanvasJSChart(options1);$("#chartContainer1").CanvasJSChart().render(); return false;});
+	$('#dropdownhelpfulness').click(function(){$("#chartContainer1").CanvasJSChart(options2);$("#chartContainer1").CanvasJSChart().render(); return false;});
+	}
+</script>
+<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script src="https://canvasjs.com/assets/script/jquery-ui.1.11.2.min.js"></script>
+<script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
 {% endblock %}

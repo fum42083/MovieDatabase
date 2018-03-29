@@ -1,13 +1,89 @@
 {% extends "SearchMovie/maintemplate.html" %}
 {% block content %}
-<div class="container-fluid h-100" id=bg>
-	<div class="row  h-10 align-items-center justify-content-center">
-		<div class="col-4 justify-content-center">
-			<h1 style="color:white; font-size: 50px; font-weight: bold;" class="text-center">{{movie.title}}</h1>
+<div class="container-fluid" id=bg>
+	<div class="row  h-20 align-items-center justify-content-center">
+		<div class="col-12 justify-content-start align-items-center p-2">
+			<h1 style="color:white; font-size: 50px; font-weight: bold;" class="text-left">{{movie.title}}</h1>
 		</div>
-		<div class="col-8 justify-content-start">
-			<span class="stars" data-rating="{{movie.rating}}" data-num-stars="10" ></span>
-			<script>
+	</div>
+	<div class="row  h-80">
+		<div class="col-3 justify-content-center align-items-center">
+			<img class="img-fluid" src="{{movie.poster}}" />
+		</div>
+		<div class="w-100 d-xl-none"></div>
+		<div class="col-9 align-items-start">
+			<div class="row">
+				<div class="col-2">
+					<p>Rating:</p>
+				</div>
+				<div class="col-10">
+					<span class="rating" data-rating="{{movie.rating|floatformat:0}}" data-num-stars="10" ></span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<p>Outline:</p>
+				</div>
+				<div class="col-10">
+					<p>{{movie.outline}}</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<p>Summary:</p>
+				</div>
+				<div class="col-10">
+					<p>{{movie.summary}}</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<p>Director:</p>
+				</div>
+				<div class="col-10">
+					<p>
+							{% for director in movie.directors %}
+									{{director.name}}, 
+							{% endfor %}
+					</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<p>Actors:</p>
+				</div>
+				<div class="col-10">
+					<p>	{% for member in movie.cast %}
+								{% if member.category == "actor" %}
+									{{member.name}}, 
+								{% endif %}
+							{% endfor %}
+						</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<p>Duration:</p>
+				</div>
+				<div class="col-10">
+					<p>{{movie.durationMin}} Minutes</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<p></p>
+				</div>
+				<div class="col-10">
+					<form method="post" action="/searchmovie/analyze/">
+						{% csrf_token %}
+						<button class="btn btn-secondary" name="movie" type="submit" value="{{movie}}">Analyze movie reviews</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
 				$.fn.stars = function() {
 					return $(this).each(function() {
 
@@ -15,67 +91,19 @@
 
 						var numStars = $(this).data("numStars");
 
-						var fullStar = new Array(Math.floor(rating + 1)).join('<i class="fa fa-star"></i>');
+						var fullStar = new Array(Math.floor(rating + 1)).join('<i class="starfull"></i>');
 
-						var halfStar = ((rating%1) !== 0) ? '<i class="fa fa-star-half-empty"></i>': '';
+						var halfStar = ((rating%1) !== 0) ? '<i class="starhalf"></i>': '';
 
-						var noStar = new Array(Math.floor(numStars + 1 - rating)).join('<i class="fa fa-star-o"></i>');
+						var noStar = new Array(Math.floor(numStars + 1 - rating)).join('<i class="starempty"></i>');
 
 						$(this).html(fullStar + halfStar + noStar);
 
 					});
 				}
 
-				$('.stars').stars();
-			</script>
-		</div>
-	</div>
-	<div class="row  h-90">
-		<div class="col-4 justify-content-center align-items-center">
-			<img class="img-fluid" src="{{movie.poster}}" />
-		</div>
-		<div class="col-8 align-items-start">
-			<div class="row">
-				<div class="col-1">
-					<p>Description:</p>
-				</div>
-				<div class="col-11">
-					<p>Rescued from the outrageous neglect of his aunt and uncle, a young boy with a great destiny proves his worth while attending Hogwarts School of Witchcraft and Wizardry. </p>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-1">
-					<p>Director:</p>
-				</div>
-				<div class="col-11">
-					<p></p>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-1">
-					<p>Stars:</p>
-				</div>
-				<div class="col-11">
-					<p></p>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-1">
-					<p>Duration:</p>
-				</div>
-				<div class="col-11">
-					<p>{{movie.durationMin}} Minutes</p>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-1">
-					<p></p>
-				</div>
-				<div class="col-11">
-					<button>Analyse Movie reviews</button>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+				$('.rating').stars();
+				
+				
+</script>
 {% endblock %}
